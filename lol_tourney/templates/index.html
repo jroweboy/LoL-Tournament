@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}
+LoL Tournament Registration -- Home
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %} <!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+	<h1>Welcome to our LAN Party!</h1>
+	<p>
+		Here you can find many people who like to play the same games you do. Especially League
+		of Legends! In fact, the numbers of League players has gotten so large that it just
+		made sense that we should make a system to do in house matchmaking. All you have to do
+		is type in your information below and be on your way!
+	</p>
+	<p>
+		<div class="modal hide fade" id="signUp">
+			<form method="post">
+				{% csrf_token %}
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Could it be this easy?</h3>
+				</div>
+				<div class="modal-body">
+					<p>
+						<label for="id_summoner">Summoner Name</label>
+						{{form.summoner}}
+					</p>
+					<p>
+						<label for="id_skype">Skype Name</label>
+						{{form.skype}} <a id="rec" rel="popover" tabindex="6"
+						data-content="Matches are easier to coordinate if everyone
+						can communicate on Skype!" data-original-title="Why Recommended?">*Recommened</a>
+					</p>
+					<p>
+						<label for="id_email">Email Address</label>
+						{{form.email}} <a id="opt" rel="popover" tabindex="7"
+						data-content="Wanna know when the next LAN Party is gonna be held?
+						Add your email to our mailing list" data-original-title="Why Optional?">*Optional</a>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">
+						Sign Up!
+					</button>
+					<a href="#" class="btn">Cancel</a>
+				</div>
+			</form>
+		</div>
+		<a data-toggle="modal" href="#signUp" class="btn btn-primary btn-large">Sign in now!</a>
+	</p>
+</div>
+{% endblock content %}
+
+{% block extras %}
+<script src="{{STATIC_URL}}js/bootstrap-tooltip.js"></script>
+<script src="{{STATIC_URL}}js/bootstrap-popover.js"></script>
+
+<script language="JavaScript">
+	$(document).ready(function() {
+		$("#rec").popover();
+		$("#opt").popover();
+	});
+</script>
+{% endblock %} 
