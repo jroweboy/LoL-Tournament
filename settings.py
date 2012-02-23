@@ -75,7 +75,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'D:/Projects/LoLTourney/lol_tourney/static',
+    ROOTDIR + '/lol_tourney/static',
     # STATIC_ROOT,
 )
 # List of finder classes that know how to find static files in
@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'LoLTourney.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Windows
