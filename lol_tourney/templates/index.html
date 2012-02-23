@@ -56,9 +56,10 @@ LoL Tournament Registration -- Home
 {% endblock content %}
 
 {% block extras %}
+{% comment %}
 <script src="{{STATIC_URL}}js/bootstrap-tooltip.js"></script>
 <script src="{{STATIC_URL}}js/bootstrap-popover.js"></script>
-
+{% endcomment %}
 <script language="JavaScript">
 	$(document).ready(function() {
 		$("#rec").popover();
