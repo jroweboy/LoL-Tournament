@@ -47,13 +47,9 @@ def home(request):
                 pass
         #if everything is successful we should return a success page
     else:
-<<<<<<< HEAD
-        form = SignUpForm()
-=======
         #first time through so no POST info yet
         form = SignUpForm()
     #render the index page
->>>>>>> d85706644aae6f88af9b60cc4e8f89fb6313f6db
     return render_to_response('index.html', {'form': form},
                                context_instance=RequestContext(request))
 
