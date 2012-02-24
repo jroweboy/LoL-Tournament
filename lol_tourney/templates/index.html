@@ -53,17 +53,42 @@ LoL Tournament Registration -- Home
 		<a data-toggle="modal" href="#signUp" class="btn btn-primary btn-large">Sign in now!</a>
 	</p>
 </div>
+{% if summoner %}
+<div class="modal show fade" id="summoner">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">×</a>
+			<h3>Now wasn't that easy!</h3>
+		</div>
+		<div class="modal-body">
+			<p>You were signed in with the following account</p>
+			<p>
+				<b>Summoner:</b> {{summoner.summoner}}
+			</p>
+			<p>
+				<b>Skype Id:</b> {{summoner.skype}}
+			</p>
+			<p>
+				<b>Level:</b> {{summoner.level}}
+			</p>
+			<p>
+				<b>Wins:</b> {{summoner.wins}}
+			</p>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn btn-primary">Close</a>
+		</div>
+</div>
+{% endif %}
 {% endblock content %}
 
 {% block extras %}
-{% comment %}
-<script src="{{STATIC_URL}}js/bootstrap-tooltip.js"></script>
-<script src="{{STATIC_URL}}js/bootstrap-popover.js"></script>
-{% endcomment %}
 <script language="JavaScript">
 	$(document).ready(function() {
 		$("#rec").popover();
 		$("#opt").popover();
 	});
+//{% if summoner %}
+$('#summoner').modal('show');
+//{% endif %}
 </script>
 {% endblock %} 
