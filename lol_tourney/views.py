@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 def home(request):
     #registered = Summoner.objects.all()
     if request.POST and request.POST.get('summoner', ''):
+        # temporary pass through for testing
         form = SignUpForm(request.POST)
         if form.is_valid():
             response = urllib2.urlopen('http://leagueofstats.com/search', 
@@ -23,8 +24,7 @@ def home(request):
                 #error blah blah
                 pass
     else:
-        pass
-    form = SignUpForm()
+        form = SignUpForm()
     return render_to_response('index.html', {'form': form},
                                context_instance=RequestContext(request))
 
