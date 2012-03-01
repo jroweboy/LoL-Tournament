@@ -7,6 +7,16 @@ LoL Tournament Registration -- Home
 {% block header %}
 {% endblock %}
 
+{% block navigation %}
+{% if user.is_authenticated %}
+<li>
+	Signed in as {{user.username}}
+	<a href="{% url lol_tourney.views.userinfo %}"></a>
+</li>
+{% endif  %}
+{% endblock %}
+
+
 {% block content %} <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
 	<h1>Welcome to our LAN Party!</h1>

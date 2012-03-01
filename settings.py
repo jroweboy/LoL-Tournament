@@ -106,8 +106,11 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
+#set the Summoner as the extended User model
+AUTH_PROFILE_MODULE = 'lol_tourney.Summoner'
+
 TEMPLATE_DIRS = (
-    # Windows
+    # Windows... not sure if this fixed the problem
     ROOTDIR + 'lol_tourney/templates/',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
