@@ -4,15 +4,20 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
+#ADMINS = (
     # ('Your Name', 'your_email@example.com'),
-)
+#)
 
-MANAGERS = ADMINS
+#MANAGERS = ADMINS
 
 ROOTDIR = os.path.abspath(os.path.dirname(__file__)) 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ROOTDIR + '/users.db',
+    },
+    'db_for_levi': {
+#    'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 #        'NAME': ROOTDIR + '/lol_tourney/users.db',                      # Or path to database file if using sqlite3.
         'NAME':'lan',
@@ -69,14 +74,14 @@ STATIC_URL = '/static/' #'http://127.0.0.1:9000/static'
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+#ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    ROOTDIR + '/lol_tourney/static',
+    ROOTDIR + '/lol_tourney/static/assets',
     # STATIC_ROOT,
 )
 # List of finder classes that know how to find static files in
@@ -108,7 +113,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'urls'
 
 #set the Summoner as the extended User model
-AUTH_PROFILE_MODULE = 'lol_tourney.Summoner'
+#AUTH_PROFILE_MODULE = 'lol_tourney.Summoner'
 
 TEMPLATE_DIRS = (
     # Windows... not sure if this fixed the problem
