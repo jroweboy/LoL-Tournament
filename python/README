@@ -1,0 +1,25 @@
+This is exactly what you are looking for. 
+The tournament app that will help you set up all the LAN parties that you ever wanted is right here
+
+So what does this actually do?
+
+- Finds out the summoners levels and adds the people to the brackets.
+- Admin match making and such privliges. The admin can choose to start a match and edit the computer generated match as needed
+- Users can see who all are in the match and the match list includes the Skype name
+- User accounts have no "password" Its as simple as type in your summoner name and your in
+- (If they want to edit things, they are technically signed in so its really easy to update your info)
+- Simplicity of use. The whole point is to make this as easy as possible (the login details are all hidden)
+- Its made in Django so it even has ponies. 
+
+So what doesn't it do?
+
+- I dunno. Good question
+
+Why do you have setup instructions?
+
+- TODO: write a lame excuse here
+Nah just kidding. Its not too hard. Just make sure that you have Django and Python installed properly (Google will help you figure that out) and manage.py runserver. If its the first time, you should probably do a python manage.py syncdb so you will have a database to connect to.
+
+From there just connect to the address it tells you. I'm not sure how hard setting this up could be. Maybe because I develop in Djang often that I forget what the first app is like :p
+
+Anyway. I'll keep expanding this app and it'l be rockin soon enough
