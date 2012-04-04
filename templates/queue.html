@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel='stylesheet' type='text/css' href='./assets/css/bootstrap.css' />
-		<link rel='stylesheet' type='text/css' href='./assets/css/lan.css' />
+		<link rel='stylesheet' type='text/css' href='{{STATIC_URL}}assets/css/bootstrap-levi.css' />
+		<link rel='stylesheet' type='text/css' href='{{STATIC_URL}}assets/css/lan.css' />
 	</head>
 	<body>
 		
@@ -61,7 +61,7 @@
 			    <div class='pane' id='activeMatches'>
 			        <div class='pane-content'>
     				    <h2>Active Matches</h2>
-    				    {{data}}
+    				    {{data|safe}}
 				    </div>
 				</div>
 			</div>

@@ -1,16 +1,13 @@
-from bs4 import BeautifulSoup
+
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect, \
-    HttpResponseNotModified
+#from django.http import HttpResponse, HttpResponseRedirect, \
+#    HttpResponseNotModified
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from lol_tourney.forms import SignUpForm
 from lol_tourney.models import Summoner
-import urllib2
-import urllib
+from __init__ import *
 import pystache
-#import cStringIO
-import settings
 
 def home(request):
     #how to get all the summoners in the database. 
@@ -20,79 +17,67 @@ def home(request):
         # temporary pass through for testing
         form = SignUpForm(request.POST)
         if form.is_valid():
-            #scrape the site to get their info 
-            response = urllib2.urlopen('http://leagueofstats.com/search', 
-                       data=urllib.urlencode({'name': form.cleaned_data['summoner'], 'region': 'na'}))
-            data = response.read()
-            #BeautifulSoup is the html parser
-            soup = BeautifulSoup(data)
-            #the line below will out a breakpoint in the code 
-            #import pdb; pdb.set_trace()
-            if soup.find('div', {'class': 'search-result',}):
-                # scrape out their level
-                level = int(soup.find('div', {'class': 'search-result',},).p.next.next.next.split('\n')[1])
-                is30 = level == 30
-                # go to the match history page
-                address = 'http://leagueofstats.com' + soup.find('div', {'class': 'search-result',},).a['href']
-                response = urllib2.urlopen(address)
-                data = response.read()
-                soup2 = BeautifulSoup(data)
-                wins = int(soup2.find(text='Unranked').parent.nextSibling.contents[0])
-                # save the info to the database
-                summoner = form.save(False)
-                summoner.is30 = is30
-                summoner.level = level
-                summoner.wins = wins
-                summoner.save()
-                
-                return render_to_response('index.html', {'form': form, 'summoner': summoner},
-                               context_instance=RequestContext(request))
-                
-            else:
-                #error -- couldn't find the user blah blah
-                pass
-        #if everything is successful we should return a success page
+            try:
+                info = scrapeInfo(form.cleaned_data['summoner'])
+            except:
+                # TODO add more appropriate error handling
+                return render(request, 'index.html', {'form': form})
+            # save the info to the database
+            summoner = form.save(False)
+            summoner.icon = info['icon']
+            summoner.level = info['level']
+            summoner.wins = info['wins']
+            summoner.save()
+            request.session['summoner'] = summoner.id
+            return render(request, 'index.html', {'form': form, 'summoner': summoner})    
+        elif 'summoner' in form.errors.keys():
+            #Terrible error handling I know, but if they are in the database
+            #just return their object from the database 
+            summoner = Summoner.objects.get(summoner=form['summoner'].value())
+            request.session['summoner'] = summoner.id
+            return render(request, 'index.html', {'form': form, 'summoner': summoner})
     else:
         #first time through so no POST info yet
         form = SignUpForm()
     #render the index page
-    return render_to_response('index.html', {'form': form},
-                               context_instance=RequestContext(request))
+    return render(request, 'index.html', {'form': form})
 
 def queue(request):
+    import pdb; pdb.set_trace()
+    
     data = {
         'match':1,
         'blue':[
             {
                 'league':'DotAliscious',
                 'skype':'morrison.levi',
-                'icon':'./assets/img/profileIcon9.jpg',
+                'icon':'%sassets/img/profileIcon9.jpg' %settings.STATIC_URL,
                 'totalWins':353,
                 'currentUser':True
             },
             {
                 'league':'Kraator',
                 'skype':'erkieliszweski',
-                'icon':'./assets/img/profileIcon24.jpg',
+                'icon':'%sassets/img/profileIcon24.jpg' %settings.STATIC_URL,
                 'totalWins': 440
             },
             {
                 'league':'Nammon',
                 'skype':'sorgeskype',
-                'icon':'./assets/img/profileIcon23.jpg',
+                'icon':'%sassets/img/profileIcon23.jpg' %settings.STATIC_URL,
                 'totalWins': 667
             },
             {
                 'league':'VictorousSecret',
                 'skype':'spencer_horrocks',
-                'icon':'./assets/img/profileIcon14.jpg',
+                'icon':'%sassets/img/profileIcon14.jpg' %settings.STATIC_URL,
                 'totalWins': 843,
                 'captain':True
             },
             {
                 'league':'Canas',
                 'skype':'david.tijerino',
-                'icon':'./assets/img/profileIcon13.jpg',
+                'icon':'%sassets/img/profileIcon13.jpg' %settings.STATIC_URL,
                 'totalWins': 544
             }
         ],
@@ -100,32 +85,32 @@ def queue(request):
             {
                 'league':'Sprognak',
                 'skype':'sprognak',
-                'icon':'./assets/img/profileIcon5.jpg',
+                'icon':'%sassets/img/profileIcon5.jpg' %settings.STATIC_URL,
                 'totalWins': 502
             },
             {
                 'league':'Ghostilocks',
                 'skype':'ghostilocks',
-                'icon':'./assets/img/profileIcon16.jpg',
+                'icon':'%sassets/img/profileIcon16.jpg' %settings.STATIC_URL,
                 'totalWins': 808,
                 'captain':True
             },
             {
                 'league':'b0b d0e',
                 'skype':'jroweboy',
-                'icon':'./assets/img/profileIcon21.jpg',
+                'icon':'%sassets/img/profileIcon21.jpg' %settings.STATIC_URL,
                 'totalWins': 224
             },
             {
                 'league':'Metroshica',
                 'skype':'landon.orr',
-                'icon':'./assets/img/profileIcon11.jpg',
+                'icon':'%sassets/img/profileIcon11.jpg' %settings.STATIC_URL,
                 'totalWins': 339
             },
             {
                 'league':'RubenatorX',
                 'skype':'rubenatorxy',
-                'icon':'./assets/img/profileIcon24.jpg',
+                'icon':'%sassets/img/profileIcon24.jpg' %settings.STATIC_URL,
                 'totalWins': 478
                 }
             ],
@@ -138,19 +123,18 @@ def queue(request):
             ],
         'isAdmin': False #fix dat later :)
     }
-    import pdb; pdb.set_trace()
-    #okay, so using his hard coded data, I'm going to use use pystache to produce the code to output it
     
-    return render_to_response('queue.html', {'data': renderMatches(data, 'current_matches')},
-                               context_instance=RequestContext(request))
+    #okay, so using his hard coded data, I'm going to use use pystache to produce the code to output it
+    datadata = {'data': renderStache('current_matches', data)}
+    
+    return render(request, 'queue.html', datadata)
 
 def ajaxUpdateMatches(request):
     # TODO make it check for an ajax call
     pass
 
-def renderMatches(data, filename):
-    import pdb; pdb.set_trace()
-    with open(settings.STATICFILES_DIRS[1] + "/%s.txt" %filename) as f:
+def renderStache(filename, data):
+    with open(settings.STATICFILES_DIRS[1] + "/%s.html" %filename) as f:
         read = f.read()
     return pystache.render(read, data)
 

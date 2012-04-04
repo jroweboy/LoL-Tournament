@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 
 class Summoner(models.Model):
     # might implement this soon
-    # icon     = models.IntegerField(default=0)
+    icon     = models.IntegerField(default=0)
 #    user = models.OneToOneField(User) 
     summoner = models.CharField(max_length=32, unique=True)
     skype    = models.CharField(max_length=32, blank=True)

@@ -19,6 +19,17 @@ LoL Tournament Registration -- Home
 
 {% block content %} <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
+	{% if summoner %}
+	<h1>Well now what?</h1>
+	<p>
+		Join the queue! It'll be extremely boring tonight if you don't play any matches! By 
+		joining the queue you will be shortly added to a match and the magic will happen from 
+		there!
+	</p>
+	<p>
+		<a href="{% url lol_tourney.views.queue %}" class="btn btn-primary btn-large">Join the queue!</a>
+	</p>
+	{% else %}
 	<h1>Welcome to our LAN Party!</h1>
 	<p>
 		Here you can find many people who like to play the same games you do. Especially League
@@ -62,6 +73,8 @@ LoL Tournament Registration -- Home
 		</div>
 		<a data-toggle="modal" href="#signUp" class="btn btn-primary btn-large">Sign in now!</a>
 	</p>
+	{% endif %}
+	
 </div>
 {% if summoner %}
 <div class="modal show fade" id="summoner">
@@ -72,7 +85,8 @@ LoL Tournament Registration -- Home
 		<div class="modal-body">
 			<p>You were signed in with the following account</p>
 			<p>
-				<b>Summoner:</b> {{summoner.summoner}}
+				<b>Summoner:</b> {{summoner.summoner}}<br />
+				<img src="{{STATIC_URL}}assets/img/profileIcon{{summoner.icon}}.jpg" width='64' height='64' align='right' />
 			</p>
 			<p>
 				<b>Skype Id:</b> {{summoner.skype}}

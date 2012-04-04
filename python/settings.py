@@ -118,7 +118,8 @@ ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Windows... not sure if this fixed the problem
-    ROOTDIR + 'lol_tourney/templates/',
+    ROOTDIR + '/lol_tourney/templates',
+    ROOTDIR + '/lol_tourney/static',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
