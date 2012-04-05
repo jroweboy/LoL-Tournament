@@ -31,6 +31,7 @@ def scrapeInfo(name):
         summoner['wins'] = int(soup2.find(text='Unranked').parent.nextSibling.contents[0])
         icontemp = soup2.find('img', {'class': 'profileIcon'}).attrs['src']
         summoner['icon'] = int(re.findall(r'\d+', icontemp)[0])
+        return summoner
     else:
         #error -- couldn't find the user blah blah
         class SummonerNotFound(Exception):

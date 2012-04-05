@@ -4,6 +4,12 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+# this is a list of all the "admins" of the app
+APP_ADMINS = [
+    'b0b d0e',
+    'dotaliscious',
+]
+
 #ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 #)
@@ -16,16 +22,17 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': ROOTDIR + '/users.db',
     },
-    'db_for_levi': {
+
+#    'db_for_levi': {
 #    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 #        'NAME': ROOTDIR + '/lol_tourney/users.db',                      # Or path to database file if using sqlite3.
-        'NAME':'lan',
-        'USER': 'monty',                      # Not used with sqlite3.
-        'PASSWORD': 'python_is_awesome',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
+#        'NAME':'lan',
+#        'USER': 'monty',                      # Not used with sqlite3.
+#        'PASSWORD': 'python_is_awesome',                  # Not used with sqlite3.
+#        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+#        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+#    }
 }
 
 
@@ -83,6 +90,8 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     ROOTDIR + '/lol_tourney/static/assets',
     ROOTDIR + '/lol_tourney/static',
+    ROOTDIR + '/lol_tourney/static_win/assets',
+    ROOTDIR + '/lol_tourney/static_win',
     # STATIC_ROOT,
 )
 # List of finder classes that know how to find static files in
@@ -120,6 +129,7 @@ TEMPLATE_DIRS = (
     # Windows... not sure if this fixed the problem
     ROOTDIR + '/lol_tourney/templates',
     ROOTDIR + '/lol_tourney/static',
+    ROOTDIR + '/lol_tourney/static_win',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

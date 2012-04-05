@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+#from django.contrib.auth.models import User
+#from django.db.models.signals import post_save
 
 class Summoner(models.Model):
     # might implement this soon
@@ -17,19 +17,19 @@ class Summoner(models.Model):
     class Meta:
         db_table = 'summoners'
 
-class Status(models.Model):
-    name = models.CharField(max_length=32)
-    class Meta:
-        db_table = 'statuses' 
+#class Status(models.Model):
+#    name = models.CharField(max_length=32)
+#    class Meta:
+#        db_table = 'statuses' 
 
-class Outcome(models.Model):
-    name = models.CharField(max_length=32)
-
-    class Meta:
-        db_table = 'outcomes'
+#class Outcome(models.Model):
+#    name = models.CharField(max_length=32)
+#    class Meta:
+#        db_table = 'outcomes'
 
 class Team(models.Model):
-    outcome = models.ForeignKey(Outcome)
+    #outcome = models.ForeignKey(Outcome)
+    outcome = models.CharField(max_length=32, default='incomplete')
     players = models.ManyToManyField(Summoner)
 
     class Meta:
@@ -38,12 +38,14 @@ class Team(models.Model):
 class Match(models.Model):
     blue = models.ForeignKey(Team, related_name='blue')
     purple = models.ForeignKey(Team, related_name='purple')
-    status = models.ForeignKey(Status)
+    #display means it should appear in the box
+    status = models.CharField(max_length=32, default='display')
+#    status = models.ForeignKey(Status)
 #    blue     = models.ManyToManyField('Summoner', related_name='blue')
 #    purple   = models.ManyToManyField('Summoner', related_name='purple')
 #    winner   = models.CharField(max_length=10,  blank=True)
-    def __unicode__(self):
-        return 'Match winner: %s' %self.winner
+#    def __unicode__(self):
+#        return 'Match winner: %s' %self.winner
 
     class Meta:
         db_table = 'matches'
