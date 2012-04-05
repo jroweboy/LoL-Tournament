@@ -1,9 +1,10 @@
 <table id='queue'>
 	{{#isAdmin}}
-	<a href="../matchmake" class='btn btn-primary btn-large'>Start MatchMaking</a>
+	Number in Queue: {{numInQueue}} | 
+	<a href="javascript:matchmake()" class='btn btn-primary btn-large'>Start MatchMaking</a>
 	{{/isAdmin}}
 	<tbody>
-		{{queue}}
+		{{#queue}}
 		<tr class='player'>
 			<td class='user'>
 			<div class='league'>

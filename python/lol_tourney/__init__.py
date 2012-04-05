@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import urllib2
 import urllib
 import re
+import settings
 
 def add2Queue(summoner_id):
     summoner = Summoner.objects.get(id=summoner_id)
@@ -40,3 +41,17 @@ def scrapeInfo(name):
             def __str__(self):
                 return repr(self.parameter)
         raise SummonerNotFound("Could not scrape %s's information" % name)
+
+def getUserInfo(request):
+    ''' 
+        Takes in a session object and determines if the current user is an admin and
+        which summoner they are. Returns a Summoner and a boolean isAdmin
+    '''
+    admin = False
+    if 'summoner' in request.session:
+        me = Summoner.objects.get(id=request.session['summoner'])
+        if me.summoner in settings.APP_ADMINS:
+            admin = True
+    else:
+        me = None
+    return me, admin

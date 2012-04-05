@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 #from django.contrib.auth.models import User
 #from django.db.models.signals import post_save
 
@@ -12,6 +13,9 @@ class Summoner(models.Model):
     in_queue = models.BooleanField(default=False)
     wins     = models.IntegerField(default=0)
     level    = models.IntegerField(default=1)
+    lan_wins = models.IntegerField(default=0) 
+    played_today = models.IntegerField(default=0)
+    #played_on = models.DateTimeField(blank=True)
     def __unicode__(self):
         return 'Summoner: %s' %(self.summoner)
     class Meta:
@@ -40,10 +44,10 @@ class Match(models.Model):
     purple = models.ForeignKey(Team, related_name='purple')
     #display means it should appear in the box
     status = models.CharField(max_length=32, default='display')
+    played_on = models.DateTimeField(default=datetime.now)
 #    status = models.ForeignKey(Status)
 #    blue     = models.ManyToManyField('Summoner', related_name='blue')
 #    purple   = models.ManyToManyField('Summoner', related_name='purple')
-#    winner   = models.CharField(max_length=10,  blank=True)
 #    def __unicode__(self):
 #        return 'Match winner: %s' %self.winner
 

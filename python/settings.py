@@ -26,7 +26,6 @@ DATABASES = {
 #    'db_for_levi': {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME': ROOTDIR + '/lol_tourney/users.db',                      # Or path to database file if using sqlite3.
 #        'NAME':'lan',
 #        'USER': 'monty',                      # Not used with sqlite3.
 #        'PASSWORD': 'python_is_awesome',                  # Not used with sqlite3.

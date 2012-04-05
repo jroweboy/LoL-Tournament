@@ -1,14 +1,16 @@
 
 #from django.conf import settings
-from django.http import HttpResponse#, HttpResponseRedirect, \
+from django.http import HttpResponse#, HttpResponseRedirect#, \
 #    HttpResponseNotModified
-from django.shortcuts import render
+
+from django.shortcuts import render, redirect
 #from django.template import RequestContext
 from lol_tourney.forms import SignUpForm
 from lol_tourney.models import *
-from __init__ import add2Queue, scrapeInfo
+from __init__ import add2Queue, scrapeInfo, getUserInfo
 import pystache
 import settings
+import random
 
 '''
 TODO List:
@@ -16,7 +18,6 @@ TODO List:
 => Make the match list work for matches being setup (the middle column)
 => TESTING!
 '''
-
 
 def home(request):
     #how to get all the summoners in the database. 
@@ -57,8 +58,31 @@ def home(request):
 def queue(request):
     #okay, so using his hard coded data, I'm going to use use pystache to produce the code to output it
     datadata = {'data': ajaxUpdateMatches(request), 'queue': ajaxUpdateQueue(request)}
-    
+
     return render(request, 'queue.html', datadata)
+
+def join_queue(request):
+    me, admin = getUserInfo(request)
+    # not logged in have them relogin :?
+    if not me:
+        return HttpResponse('Not authenticated', status=403)
+    me.in_queue = True
+    me.save()
+    return ajaxUpdateQueue(request)
+
+def kick_match(request):
+    me, admin = getUserInfo(request)
+    # not logged in have them relogin :?
+    if not me:
+        return HttpResponse('Not authenticated', status=403)
+
+    match_id = request.POST['match_id']
+    match = Match.objects.get(pk=match_id)
+    me.team_set.get(match__)
+    me.in_queue = True
+    me.team_set.
+    me.save()
+    return ajaxUpdateQueue(request)
 
 def ajaxUpdateQueue(request):
     #if not request.is_ajax():
@@ -66,20 +90,17 @@ def ajaxUpdateQueue(request):
     summoners = Summoner.objects.filter(in_queue=True)
     data = {}
     queue = []
-    admin = False
-    if 'summoner' in request.session:
-        me = Summoner.objects.get(id=request.session['summoner'])
-        if me.summoner in settings.APP_ADMINS:
-            admin = True
-    else:
-        me = None
+    me, admin = getUserInfo(request)
     for s in summoners:
         queue.append(
             {'league': s.summoner,
-             'totalWins' : s.level, } 
+             'totalWins' : s.wins, } 
         )
     data['queue'] = queue
     data['isAdmin'] = admin
+    data['numInQueue'] = len(summoners)
+    if request.is_ajax():
+        return HttpResponse(renderStache('ajax_queue', data))
     return renderStache('ajax_queue', data)
 
 def ajaxUpdateMatches(request):
@@ -87,13 +108,7 @@ def ajaxUpdateMatches(request):
     #    return HttpResponse(403)
     # me is the current user
     #import pdb; pdb.set_trace()
-    admin = False
-    if 'summoner' in request.session:
-        me = Summoner.objects.get(id=request.session['summoner'])
-        if me.summoner in settings.APP_ADMINS:
-            admin = True
-    else:
-        me = None
+    me, admin = getUserInfo(request)
     
     matches = Match.objects.filter(status='display')
     output = ''
@@ -105,9 +120,8 @@ def ajaxUpdateMatches(request):
         # convert the Summoner objects on each team into a list of dictionaries for the template
         for p in m.blue.players.all():
             s = {}
-            if me == p.summoner:
+            if me == p:
                 s['currentUser'] = True
-            s['isAdmin'] = admin
             s['league'] = p.summoner
             s['skype'] = p.skype
             s['totalWins'] = p.wins
@@ -115,17 +129,20 @@ def ajaxUpdateMatches(request):
             data['blue'].append(s)
         for p in m.purple.players.all():
             s = {}
-            if me == p.summoner:
+            if me == p:
                 s['currentUser'] = True
-            s['isAdmin'] = admin
             s['league'] = p.summoner
             s['skype'] = p.skype
             s['totalWins'] = p.wins
             s['icon'] = '%sassets/img/profileIcon%s.jpg' %(settings.STATIC_URL, p.icon)
             data['purple'].append(s)
         
+        data['isAdmin'] = admin
+        data['match_id'] = m.pk
         output += renderStache('ajax_match', data)
     
+    if request.is_ajax():
+        return HttpResponse(output)
     return output
     
 
@@ -139,6 +156,24 @@ def renderStache(filename, data):
             read = f.read()
     return pystache.render(read, data)
 
+def finishMatch(request):
+    me, admin = getUserInfo(request)
+    if not admin:
+        return HttpResponse('Not authenticated', status=403)
+    match_id = request.POST['match_id']
+    winner = request.POST['winner']
+    match = Match.objects.get(pk=match_id)
+    match.status = winner
+    if winner == 'blue':
+        match.blue.outcome = 'win'
+        match.purple.outcome = 'lose'
+    else:
+        match.blue.outcome = 'lose'
+        match.purple.outcome = 'win'
+    match.save()
+    return HttpResponse("Looks like work happened!")
+    
+
 def matchmake(request):
     ''' 
         How I added a match:
@@ -149,7 +184,39 @@ def matchmake(request):
         summoner1.team_set.add(teamA)
         then set match.blue = teamA and so forth
     '''
-    pass
+    #import pdb; pdb.set_trace()
+    #inqueue = random.shuffle(Summoner.objects.filter(in_queue=True))
+    #being lazy using SQL Random
+    inqueue = Summoner.objects.filter(in_queue=True).order_by('?')[:10]
+    if len(inqueue) < 10:
+        #TODO fix this to be a more approriate response
+        return HttpResponse('Not authenticated', status=403)
+    purple = inqueue[0:5]
+    blue = inqueue[5:10]
+    team_blue = Team()
+    team_purple = Team()
+    team_blue.save()
+    team_purple.save()
+    for s in purple:
+        team_purple.players.add(s)
+        s.team_set.add(team_purple)
+        s.in_queue = False
+        s.save()
+    for s in blue:
+        team_blue.players.add(s)
+        s.team_set.add(team_blue)
+        s.in_queue = False
+        s.save()
+        
+    team_blue.save()
+    team_purple.save()
+    match = Match()
+    match.blue = team_blue
+    match.purple = team_purple
+    
+    match.save()
+        
+    return ajaxUpdateMatches(request)
 
 #def matches(request):
 #    return render_to_response('index.html', context_instance=RequestContext(request))
