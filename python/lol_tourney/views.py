@@ -24,6 +24,7 @@ def home(request):
     #registered = Summoner.objects.all()
     #make sure that they at least put in a summoner name
     if request.POST and request.POST.get('summoner', ''):
+        import pdb; pdb.set_trace()
         # temporary pass through for testing
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -31,7 +32,7 @@ def home(request):
                 info = scrapeInfo(form.cleaned_data['summoner'])
             except:
                 # TODO add more appropriate error handling
-                return render(request, 'index.html', {'form': form})
+                return render(request, 'index.html', {'form': form, 'error': 'Well, I couldnt find your info'})
             # save the info to the database
             summoner = form.save(False)
             summoner.icon = info['icon']
@@ -65,6 +66,7 @@ def join_queue(request):
     # not logged in have them relogin :?
     if not me:
         return HttpResponse('Not authenticated', status=403)
+    # TODO need to stop people from joining queue if they are in a match lol
     me.in_queue = True
     me.save()
     return ajaxUpdateQueue(request)
@@ -72,15 +74,30 @@ def join_queue(request):
 def kick_match(request):
     me, admin = getUserInfo(request)
     # not logged in have them relogin :?
-    if not me:
+    if not admin or not me:
         return HttpResponse('Not authenticated', status=403)
-
+    person = request.POST['kickee']
     match_id = request.POST['match_id']
-    match = Match.objects.get(pk=match_id)
-    #me.team_set.get(match__)
-    me.in_queue = True
-    #me.team_set.
-    me.save()
+    if not match_id or not person:
+        return HttpResponse('Not authenticated', status=403)
+    #match = Match.objects.get(pk=match_id)
+    kickee = Summoner.objects.get(summoner=person)
+    # beautiful... found a limitation of the DB design right thar!
+    try: 
+        team = kickee.team_set.get(blue__pk=match_id)
+    except: 
+        try:
+            team = kickee.team_set.get(purple__pk=match_id)
+        except:
+            return HttpResponse('Not authenticated', status=403)
+    
+    new_guy = Summoner.objects.filter(in_queue=True).order_by('?')[0]
+    team.players.add(new_guy)
+    team.players.remove(kickee)
+    kickee.in_queue = True
+    new_guy.in_queue = False
+    kickee.save()
+    new_guy.save()
     return ajaxUpdateQueue(request)
 
 def ajaxUpdateQueue(request):
@@ -238,8 +255,30 @@ split the last two to most even
 '''
 below is used solely for recreating the database again
 
+from lol_tourney.models import *
+
 blue = [{'league':'DotAliscious', 'skype':'morrison.levi', 'icon': 9, 'totalWins':353, 'currentUser':True}, {'league':'Kraator', 'skype':'erkieliszweski', 'icon': 24, 'totalWins': 440}, {'league':'Nammon', 'skype':'sorgeskype', 'icon':23, 'totalWins': 667}, {'league':'VictorousSecret', 'skype':'spencer_horrocks', 'icon':14, 'totalWins': 843, 'captain':True}, {'league':'Canas', 'skype':'david.tijerino', 'icon':13, 'totalWins': 544}]
 purple = [{'league':'Sprognak', 'skype':'sprognak', 'icon':5, 'totalWins': 502}, {'league':'Ghostilocks', 'skype':'ghostilocks', 'icon':16, 'totalWins': 808, 'captain':True}, {'league':'b0b d0e', 'skype':'jroweboy', 'icon':21, 'totalWins': 224}, {'league':'Metroshica', 'skype':'landon.orr', 'icon':11, 'totalWins': 339}, {'league':'RubenatorX', 'skype':'rubenatorxy', 'icon':24, 'totalWins': 478}]
+
+for b in blue:
+ s = Summoner()
+ s.summoner = b['league']
+ s.skype = b['skype']
+ s.icon = b['icon']
+ s.wins = b['totalWins']
+ s.level = 30
+ s.in_queue = True
+ s.save()
+
+for b in purple:
+ s = Summoner()
+ s.summoner = b['league']
+ s.skype = b['skype']
+ s.icon = b['icon']
+ s.wins = b['totalWins']
+ s.level = 30
+ s.in_queue = True
+ s.save()
 
 'skypeGroup': [                'morrison.levi', 'erkieliszweski',
                 'sorgeskype',

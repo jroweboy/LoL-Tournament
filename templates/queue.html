@@ -83,14 +83,12 @@
 				});
 			}
 			
-			function kickFromMatch(person){
-				debugger;
+			function kickFromMatch(form,person){
 				$.ajax({
 					url: "{% url lol_tourney.views.kick_match %}",
   					type: "POST",
-  					data: "match_id="+form.match_id.value
-  							+"&user="+form.winner.value
-  							+"&kickee="+"temp",
+  					data: "match_id="+form
+  							+"&kickee="+person,
 					statusCode: {
     					403: function() {
 							$("#mm_results_body").html("Sorry, bro. \
