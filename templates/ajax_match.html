@@ -34,7 +34,7 @@
 		</div></td>
 		<td class='record'><span class='totalWins'>{{totalWins}}</span></td>
 		{{#isAdmin}} <td class='admin'>
-		<button class='remove' data-user='{{league}}' onclick="kickFromQueue()">
+		<button class='remove' data-user='{{league}}' onclick="kickFromMatch(this.attributes['data-user'])">
 			x
 		</button></td>
 		{{/isAdmin}}
@@ -59,7 +59,7 @@
 		</div></td>
 		<td class='record'><span class='totalWins'>{{totalWins}}</span></td>
 		{{#isAdmin}} <td class='admin'>
-		<button class='remove' data-user='{{league}}'>
+		<button class='remove' data-user='{{league}}' onclick="kickFromMatch(this.attributes['data-user'])">
 			x
 		</button></td>
 		{{/isAdmin}}

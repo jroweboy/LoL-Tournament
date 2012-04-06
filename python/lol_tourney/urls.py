@@ -10,4 +10,5 @@ urlpatterns = patterns('lol_tourney.views',
     url(r'^joinQueue/$', 'join_queue'),
     url(r'^ajax/updateQueue$', 'ajaxUpdateQueue'),
     url(r'^ajax/updateMatch$', 'ajaxUpdateMatches'),
+    url(r'^ajax/kickMatch$', 'kick_match'),
 )

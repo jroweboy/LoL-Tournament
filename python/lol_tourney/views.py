@@ -27,7 +27,6 @@ def home(request):
         # temporary pass through for testing
         form = SignUpForm(request.POST)
         if form.is_valid():
-            import pdb; pdb.set_trace()
             try:
                 info = scrapeInfo(form.cleaned_data['summoner'])
             except:
@@ -78,9 +77,9 @@ def kick_match(request):
 
     match_id = request.POST['match_id']
     match = Match.objects.get(pk=match_id)
-    me.team_set.get(match__)
+    #me.team_set.get(match__)
     me.in_queue = True
-    me.team_set.
+    #me.team_set.
     me.save()
     return ajaxUpdateQueue(request)
 
