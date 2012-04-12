@@ -1,0 +1,3 @@
+[submodule "php/Artax"]
+	path = php/Artax
+	url = git@github.com:rdlowrey/Artax.git

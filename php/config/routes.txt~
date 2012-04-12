@@ -1,0 +1,39 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                     ---- SAMPLE ROUTES FILE ----                        ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                                                                         ;
+; Anatomy of a Route:                                                     ;
+; ======================================================================= ;
+; HTTP METHOD (optional)       URI PATTERN        TARGET CONTROLLER       ;
+;           |                       |                     |               ;
+;          GET              /test/users/#user      Controllers\User       ;
+;                                                                         ;
+; Route examples:                                                         ;
+; ======================================================================= ;
+;                                                                         ;
+; GET /test/users/:user Controllers\User                                  ;
+; GET /products/#id Products                                              ;
+; /users Users                                                            ;
+; PUT /test/users Controllers\NewUser                                     ;
+;                                                                         ;
+;                                                                         ;
+; Regex shortcut characters:                                              ;
+; ======================================================================= ;
+; shortcut   constraint      regex component                              ;
+; ========   ==========      ===============                              ;
+; #var       (integer)       (?P<var>\d+)                                 ;
+; :var       (alphanumeric)  (?P<var>[a-zA-Z0-9_.-]+)                     ;
+;                                                                         ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+/app			Controller\App
+
+/data			Controller\Data
+
+/queue			Controller\Queue
+/match/#id		Controller\Match
+
+/matches(?:/(?P<type>(in_creation|in_game|complete)))?	Controller\Matches 
+
+/summoner/:name		Controller\Summoner
