@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}
+LoL Tournament Registration -- Home
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block navigation %}
+{% if user.is_authenticated %}
+<li>
+	Signed in as {{user.username}}
+	<a href="{% url lol_tourney.views.userinfo %}"></a>
+</li>
+{% endif  %}
+{% endblock %}
+
+
+{% block content %} <!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+	{% if summoner %}
+	<h1>Well now what?</h1>
+	<p>
+		Join the queue! It'll be extremely boring tonight if you don't play any matches! By 
+		joining the queue you will be shortly added to a match and the magic will happen from 
+		there!
+	</p>
+	<p>
+		<a href="{% url lol_tourney.views.queue %}" class="btn btn-primary btn-large">Join the queue!</a>
+	</p>
+	{% else %}
+	<h1>Welcome to our LAN Party!</h1>
+	<p>
+		Here you can find many people who like to play the same games you do. Especially League
+		of Legends! In fact, the numbers of League players has gotten so large that it just
+		made sense that we should make a system to do in house matchmaking. All you have to do
+		is type in your information below and be on your way!
+	</p>
+	<p>
+		<div class="modal hide fade" id="{% if error %}retry{% endif %}signUp">
+			{% if round_two %}
+			<form method="post">
+				{% csrf_token %}
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>{{ error }}</h3>
+				</div>
+				<div class="modal-body">
+					{{form.username}}{{form.password}}{{form.skype}}{{form.email}}
+					<p>
+						<label for="id_level">{{form.level.label}}</label>
+						{{form.level}} <a id="opt" rel="popover" tabindex="6"
+						data-content="If you don't say you are level thrity you will not be matched with any other level thirties. Its not really required though"
+						 data-original-title="Whats this for?">*Required</a>
+					</p>
+					<p>
+						<label for="id_wins">{{form.wins.label}}</label>
+						{{form.wins}} <a id="rec" rel="popover" tabindex="7"
+						data-content="This is so the match making can help split the people up evenly. If you don't enter any wins it defaults to 0" data-original-title="Why wins?">*Required</a>
+					</p>
+					<p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">
+						Continue
+					</button>
+				</div>
+			</form>
+			{% else %}
+			<form method="post">
+				{% csrf_token %}
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>If you have signed in before, you only need to provide your username and password</h3>
+				</div>
+				<div class="modal-body">
+					{{form.non_field_errors}}
+					<p>
+						{{form.username.errors}}
+						<label for="id_username">{{form.username.label}}</label>
+						{{form.username}} <a id="opt" rel="popover" tabindex="6"
+						data-content="This should be your in game name and not the name you sign into League with."
+						 data-original-title="Which Summoner Name?">*</a>
+					</p>
+					<p>
+						{{form.password.errors}}
+						<label for="id_password">{{form.password.label}}</label>
+						{{form.password}}
+					</p>
+					<p>
+						<label for="id_skype">{{form.skype.label}}</label>
+						{{form.skype}} <a id="rec" rel="popover" tabindex="7"
+						data-content="Matches are easier to coordinate if everyone
+						can communicate on Skype!" data-original-title="Why Recommended?">*Recommened</a>
+					</p>
+					<p>
+						{{form.email.errors}}
+						<label for="id_email">{{form.email.label}}</label>
+						{{form.email}} <a id="opt" rel="popover" tabindex="8"
+						data-content="Wanna know when the next LAN Party is gonna be held?
+						Add your email to our mailing list" data-original-title="Why Optional?">*Optional</a>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">
+						Sign Up!
+					</button>
+					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+				</div>
+			</form>
+			{% endif %}
+		</div>
+		<a data-toggle="modal" href="#signUp" class="btn btn-primary btn-large">Sign in now!</a>
+	</p>
+	{% endif %}
+	
+</div>
+{% if summoner %}
+<div class="modal show fade" id="summoner">
+		<div class="modal-header">
+			<a class="close" data-dismiss="modal">×</a>
+			<h3>Now wasn't that easy!</h3>
+		</div>
+		<div class="modal-body">
+			<p>You were signed in with the following account</p>
+			<p>
+				<b>Summoner:</b> {{summoner.summoner}}<br />
+				<img src="{{STATIC_URL}}assets/img/profileIcon{{summoner.icon}}.jpg" width='64' height='64' align='right' />
+			</p>
+			<p>
+				<b>Skype Id:</b> {{summoner.skype}}
+			</p>
+			<p>
+				<b>Level:</b> {{summoner.level}}
+			</p>
+			<p>
+				<b>Wins:</b> {{summoner.wins}}
+			</p>
+		</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal" class="btn btn-primary">Close</a>
+		</div>
+</div>
+{% endif %}
+{% endblock content %}
+
+{% block extras %}
+<script language="JavaScript">
+	$(document).ready(function() {
+		$("#rec").popover();
+		$("#opt").popover();
+	});
+//{% if summoner %}
+$('#summoner').modal('show');
+//{% endif %}
+//{% if error %}
+$('#retrysignUp').modal('show');
+//{% endif %}
+</script>
+{% endblock %} 
