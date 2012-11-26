@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' type='text/css' href='{{STATIC_URL}}assets/css/bootstrap-levi.css' />
+		<link rel='stylesheet' type='text/css' href='{{STATIC_URL}}assets/css/lan.css' />
+	</head>
+	<body>
+		<div id='wrapper' class='row-fluid'>
+			<div class='span4'>
+				<div class='pane'>
+					<div class='pane-content'>
+						<h2>Queue</h2>
+						<div class='update_queue'>
+							{{queue|safe}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class='span4'>
+				<div class='pane' id='matches'>
+					<div class='pane-content'>
+						<h2>Matches Being Set Up</h2>
+					</div>
+				</div>
+			</div>
+			<div class='span4'>
+				<div class='pane' id='activeMatches'>
+					<div class='pane-content'>
+						<h2>Active Matches</h2>
+						<table class='teams' id='active-match-{{match}}'>
+							{{data|safe}}
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id='header'>
+			<button id='play'>
+				Play
+			</button>
+			<button id='callGroup'>Call Group</button>
+		</div>
+		<script>
+		function skypeCall(){
+			var callButton = document.getElementById('callGroup');
+
+			if(callButton) {
+				var callGroup = data.skypeGroup;
+				var getMyCallGroup = function() {
+					return callGroup.filter(function(element, index) {
+						return element !== currentUser.skype;
+					});
+				};
+				callButton.addEventListener('click', function(event) {
+					window.open('callto://' + getMyCallGroup().join(';'));
+				});
+			}
+
+		}
+		</script>
+	</body>
+</html>
