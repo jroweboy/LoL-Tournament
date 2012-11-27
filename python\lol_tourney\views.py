@@ -77,6 +77,10 @@ def home(request):
     return render(request, 'index.html', {'form': form})
 
 @login_required
+def user_info(request):
+    pass
+
+@login_required
 def queue(request):
     #okay, so using his hard coded data, I'm going to use use pystache to produce the code to output it
     datadata = {'data': ajaxUpdateMatches(request), 'queue': ajaxUpdateQueue(request)}

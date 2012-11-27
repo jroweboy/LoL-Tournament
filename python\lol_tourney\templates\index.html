@@ -1,25 +1,31 @@
 {% extends "base.html" %}
 
 {% block title %}
-LoL Tournament Registration -- Home
+LoL Tournament -- Home
 {% endblock %}
 
 {% block header %}
 {% endblock %}
 
+{% block bar_title %}
+LoL Tournament Registration
+{% endblock %}
+
 {% block navigation %}
 {% if user.is_authenticated %}
 <li>
-	Signed in as {{user.username}}
-	<a href="{% url lol_tourney.views.userinfo %}"></a>
+	<a href="{% url lol_tourney.views.user_info %}">Edit my Info</a>
 </li>
-{% endif  %}
+<li>
+	<a href="{% url django.contrib.auth.views.logout %}">Sign out</a>
+</li>
+{% endif %}
 {% endblock %}
 
 
-{% block content %} <!-- Main hero unit for a primary marketing message or call to action -->
+{% block content %}
 <div class="hero-unit">
-	{% if summoner %}
+	{% if user.is_authenticated %}
 	<h1>Well now what?</h1>
 	<p>
 		Join the queue! It'll be extremely boring tonight if you don't play any matches! By 
@@ -144,6 +150,47 @@ LoL Tournament Registration -- Home
 </div>
 {% endif %}
 {% endblock content %}
+
+{% block bottom %}
+			<!-- Example row of columns -->
+			<div class="row">
+				<div class="span4">
+					<h2>Nonmatched players</h2>
+					<p>
+						Who all isn't playing right now? 
+						Come see the people who have signed up but aren't 
+						currently signed into a match. Use this to find more people
+						for a match 
+					</p>
+					<p>
+						<a class="btn" href="#">Check it out</a>
+					</p>
+				</div>
+				<div class="span4">
+					<h2>Make a match!</h2>
+					<p>
+						Reflect on todays matches. Revel in your amazing victories.
+					</p>
+					<p>
+						<a class="btn" href="#">Let's see them</a>
+					</p>
+				</div>
+				<div class="span4">
+					<h2>Other games</h2>
+					<p>
+						You don't just play League? Sign up here for other games!
+					</p>
+					<p>
+						<div class="alert">
+    						<button type="button" class="close" data-dismiss="alert">×</button>
+						    <strong>Nope</strong> Not implemented yet :)
+    					</div>
+						<!--<a class="btn" data-toggle="alert" href="#Nope" enabled="false">Bring it</a>-->
+					</p>
+				</div>
+			</div>
+			
+{% endblock %}
 
 {% block extras %}
 <script language="JavaScript">
