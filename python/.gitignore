@@ -1,0 +1,6 @@
+# ignore all pyc and pyo files
+*.pyo
+*.pyc
+
+# ignore the sqllite db also
+*.db
