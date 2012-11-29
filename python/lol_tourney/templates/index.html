@@ -1,25 +1,34 @@
 {% extends "base.html" %}
 
 {% block title %}
-LoL Tournament Registration -- Home
+LoL Tournament -- Home
 {% endblock %}
 
 {% block header %}
 {% endblock %}
 
+{% block bar_title %}
+LoL Tournament Registration
+{% endblock %}
+
 {% block navigation %}
+<li class="active">
+	<a href="#">Home</a>
+</li>
 {% if user.is_authenticated %}
 <li>
-	Signed in as {{user.username}}
-	<a href="{% url lol_tourney.views.userinfo %}"></a>
+	<a href="{% url lol_tourney.views.user_info %}">Edit my Info</a>
 </li>
-{% endif  %}
+<li>
+	<a href="{% url django.contrib.auth.views.logout %}">Sign out</a>
+</li>
+{% endif %}
 {% endblock %}
 
 
-{% block content %} <!-- Main hero unit for a primary marketing message or call to action -->
+{% block content %}
 <div class="hero-unit">
-	{% if summoner %}
+	{% if user.is_authenticated %}
 	<h1>Well now what?</h1>
 	<p>
 		Join the queue! It'll be extremely boring tonight if you don't play any matches! By 
@@ -38,27 +47,66 @@ LoL Tournament Registration -- Home
 		is type in your information below and be on your way!
 	</p>
 	<p>
-		<div class="modal hide fade" id="signUp">
+		<div class="modal hide fade" id="{% if error %}retry{% endif %}signUp">
+			{% if round_two %}
 			<form method="post">
 				{% csrf_token %}
 				<div class="modal-header">
 					<a class="close" data-dismiss="modal">×</a>
-					<h3>Could it be this easy?</h3>
+					<h3>{{ error }}</h3>
 				</div>
 				<div class="modal-body">
+					{{form.username}}{{form.password}}{{form.skype}}{{form.email}}
 					<p>
-						<label for="id_summoner">Summoner Name</label>
-						{{form.summoner}}
+						<label for="id_level">{{form.level.label}}</label>
+						{{form.level}} <a id="opt" rel="popover" tabindex="6"
+						data-content="If you don't say you are level thrity you will not be matched with any other level thirties. Its not really required though"
+						 data-original-title="Whats this for?">*Required</a>
 					</p>
 					<p>
-						<label for="id_skype">Skype Name</label>
-						{{form.skype}} <a id="rec" rel="popover" tabindex="6"
+						<label for="id_wins">{{form.wins.label}}</label>
+						{{form.wins}} <a id="rec" rel="popover" tabindex="7"
+						data-content="This is so the match making can help split the people up evenly. If you don't enter any wins it defaults to 0" data-original-title="Why wins?">*Required</a>
+					</p>
+					<p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">
+						Continue
+					</button>
+				</div>
+			</form>
+			{% else %}
+			<form method="post">
+				{% csrf_token %}
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>If you have signed in before, you only need to provide your username and password</h3>
+				</div>
+				<div class="modal-body">
+					{{form.non_field_errors}}
+					<p>
+						{{form.username.errors}}
+						<label for="id_username">{{form.username.label}}</label>
+						{{form.username}} <a id="opt" rel="popover" tabindex="6"
+						data-content="This should be your in game name and not the name you sign into League with."
+						 data-original-title="Which Summoner Name?">*</a>
+					</p>
+					<p>
+						{{form.password.errors}}
+						<label for="id_password">{{form.password.label}}</label>
+						{{form.password}}
+					</p>
+					<p>
+						<label for="id_skype">{{form.skype.label}}</label>
+						{{form.skype}} <a id="rec" rel="popover" tabindex="7"
 						data-content="Matches are easier to coordinate if everyone
 						can communicate on Skype!" data-original-title="Why Recommended?">*Recommened</a>
 					</p>
 					<p>
-						<label for="id_email">Email Address</label>
-						{{form.email}} <a id="opt" rel="popover" tabindex="7"
+						{{form.email.errors}}
+						<label for="id_email">{{form.email.label}}</label>
+						{{form.email}} <a id="opt" rel="popover" tabindex="8"
 						data-content="Wanna know when the next LAN Party is gonna be held?
 						Add your email to our mailing list" data-original-title="Why Optional?">*Optional</a>
 					</p>
@@ -68,8 +116,10 @@ LoL Tournament Registration -- Home
 						Sign Up!
 					</button>
 					<a href="#" data-dismiss="modal" class="btn">Cancel</a>
+					<a href="{% url django.contrib.auth.views.password_reset %}" class="btn">Actually, I forgot my password...</a>
 				</div>
 			</form>
+			{% endif %}
 		</div>
 		<a data-toggle="modal" href="#signUp" class="btn btn-primary btn-large">Sign in now!</a>
 	</p>
@@ -105,6 +155,47 @@ LoL Tournament Registration -- Home
 {% endif %}
 {% endblock content %}
 
+{% block bottom %}
+			<!-- Example row of columns -->
+			<div class="row">
+				<div class="span4">
+					<h2>Nonmatched players</h2>
+					<p>
+						Who all isn't playing right now? 
+						Come see the people who have signed up but aren't 
+						currently signed into a match. Use this to find more people
+						for a match 
+					</p>
+					<p>
+						<a class="btn" href="#">Check it out</a>
+					</p>
+				</div>
+				<div class="span4">
+					<h2>Make a match!</h2>
+					<p>
+						Reflect on todays matches. Revel in your amazing victories.
+					</p>
+					<p>
+						<a class="btn" href="#">Let's see them</a>
+					</p>
+				</div>
+				<div class="span4">
+					<h2>Other games</h2>
+					<p>
+						You don't just play League? Sign up here for other games!
+					</p>
+					<p>
+						<div class="alert">
+    						<!--<button type="button" class="close" data-dismiss="alert">×</button>-->
+						    <strong>Nope</strong> Not implemented yet :)
+    					</div>
+						<!--<a class="btn" data-toggle="alert" href="#Nope" enabled="false">Bring it</a>-->
+					</p>
+				</div>
+			</div>
+			
+{% endblock %}
+
 {% block extras %}
 <script language="JavaScript">
 	$(document).ready(function() {
@@ -113,6 +204,9 @@ LoL Tournament Registration -- Home
 	});
 //{% if summoner %}
 $('#summoner').modal('show');
+//{% endif %}
+//{% if error %}
+$('#retrysignUp').modal('show');
 //{% endif %}
 </script>
 {% endblock %} 

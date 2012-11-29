@@ -7,6 +7,7 @@ TEMPLATE_DEBUG = DEBUG
 # this is a list of all the "admins" of the app
 APP_ADMINS = [
     'b0b d0e',
+    'admin',
     'dotaliscious',
 ]
 
@@ -26,9 +27,9 @@ DATABASES = {
 #    'db_for_levi': {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME':'lan',
-#        'USER': 'monty',                      # Not used with sqlite3.
-#        'PASSWORD': 'python_is_awesome',                  # Not used with sqlite3.
+#        'NAME':'',
+#        'USER': '',                      # Not used with sqlite3.
+#        'PASSWORD': '',                  # Not used with sqlite3.
 #        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
 #        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
 #    }
@@ -135,7 +136,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-#    'django.contrib.auth',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
@@ -143,7 +144,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     # Uncomment the next line to enable the admin:
-#    'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
 #    'django.contrib.admindocs',
     'lol_tourney',

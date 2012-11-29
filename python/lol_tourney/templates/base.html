@@ -34,12 +34,9 @@
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
-					<a class="brand" href="#">LoL Tournament Registration</a>
+					<a class="brand" href="#">{% block bar_title %}{% endblock %}</a>
 					<div class="nav-collapse">
 						<ul class="nav">
-							<li class="active">
-								<a href="#">Home</a>
-							</li>
 							{% comment %}
 							<li>
 								<a href="{% url admin:index %}">Admin</a>
@@ -51,7 +48,7 @@
 								<a href="#contact">Contact</a>
 							</li>
 							{% endcomment %}
-							{% block nav %}
+							{% block navigation %}
 							{% endblock %}
 						</ul>
 					</div><!--/.nav-collapse -->
@@ -60,43 +57,14 @@
 		</div>
 		<div class="container">
 			{% block content %}
-			{% endblock %} <!-- Example row of columns -->
-			<div class="row">
-				<div class="span4">
-					<h2>Nonmatched players</h2>
-					<p>
-						Who all isn't playing right now? 
-						Come see the people who have signed up but aren't 
-						currently signed into a match. Use this to find more people
-						for a match 
-					</p>
-					<p>
-						<a class="btn" href="#">Check it out</a>
-					</p>
-				</div>
-				<div class="span4">
-					<h2>Make a match!</h2>
-					<p>
-						Reflect on todays matches. Revel in your amazing victories.
-					</p>
-					<p>
-						<a class="btn" href="#">Let's see them</a>
-					</p>
-				</div>
-				<div class="span4">
-					<h2>Other games</h2>
-					<p>
-						You don't just play League? Sign up here for other games!
-					</p>
-					<p>
-						<a class="btn" href="#">Bring it</a>
-					</p>
-				</div>
-			</div>
+			{% endblock %} 
+			{% block bottom %}
+			{% endblock %}
 			<hr>
+			
 			<footer>
 				<p>
-					&copy; James Rowe & Levi Morrison 2012
+					&copy; James Rowe 2012
 				</p>
 			</footer>
 		</div>

@@ -11,9 +11,18 @@ def add2Queue(summoner_id):
     summoner.save()
     
 def scrapeInfo(name):
+    try:
+        return scrapeInfo_los(name)
+    except:
+        return False
+
+def scrapeInfo_los(name):
     #scrape the site to get their info 
-    response = urllib2.urlopen('http://leagueofstats.com/search',
+    try :
+        response = urllib2.urlopen('http://leagueofstats.com/search',
                        data=urllib.urlencode({'name': name, 'region': 'na'}))
+    except:
+        raise SummonerNotFound("Unable to contact the site")
     data = response.read()
     #BeautifulSoup is the html parser
     soup = BeautifulSoup(data)
@@ -26,7 +35,10 @@ def scrapeInfo(name):
                 
         # go to the match history page and scrape everything else
         address = 'http://leagueofstats.com' + soup.find('div', {'class': 'search-result', },).a['href']
-        response = urllib2.urlopen(address)
+        try :
+            response = urllib2.urlopen(address)
+        except :
+            raise SummonerNotFound("")
         data = response.read()
         soup2 = BeautifulSoup(data)
         summoner['wins'] = int(soup2.find(text='Unranked').parent.nextSibling.contents[0])
@@ -34,14 +46,16 @@ def scrapeInfo(name):
         summoner['icon'] = int(re.findall(r'\d+', icontemp)[0])
         return summoner
     else:
-        #error -- couldn't find the user blah blah
-        class SummonerNotFound(Exception):
-            def __init__(self, value):
-                self.parameter = value
-            def __str__(self):
-                return repr(self.parameter)
         raise SummonerNotFound("Could not scrape %s's information" % name)
 
+#error -- couldn't find the user blah blah
+class SummonerNotFound(Exception):
+    def __init__(self, value):
+        self.parameter = value
+    def __str__(self):
+        return repr(self.parameter)
+
+"""
 def getUserInfo(request):
     ''' 
         Takes in a session object and determines if the current user is an admin and
@@ -55,3 +69,4 @@ def getUserInfo(request):
     else:
         me = None
     return me, admin
+"""
