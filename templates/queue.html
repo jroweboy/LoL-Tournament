@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' type='text/css' href='{{STATIC_URL}}assets/css/bootstrap-levi.css' />
+		<link rel='stylesheet' type='text/css' href='{{STATIC_URL}}assets/css/lan.css' />
+		<title>Tournament of Legends -- Queue</title>
+	</head>
+	<body>
+		<div id='wrapper' class='row-fluid'>
+			<div class='span4'>
+				<div class='pane'>
+					<div class='pane-content'>
+						<h2>Queue</h2>
+						<div class='update_queue' id='active-queue'>
+							{{queue|safe}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class='span4'>
+				<div class='pane' id='matches'>
+					<div class='pane-content'>
+						<h2>Matches Being Set Up</h2>
+					</div>
+				</div>
+			</div>
+			<div class='span4'>
+				<div class='pane' id='activeMatches'>
+					<div class='pane-content'>
+						<h2>Active Matches</h2>
+						<table class='teams' id='active-matches'>
+							{{data|safe}}
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id='header'>
+			<button id='play' onclick="joinQueue();">
+				Play
+			</button>
+			<!--<button id='callGroup'>Call Group</button>-->
+		</div>
+		<div class="modal hide fade" style='color: black;' id="mm_results">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3>Macthmaking results</h3>
+			</div>
+			<div class="modal-body" id="mm_results_body"></div>
+			<div class="modal-footer">
+				<a href="#" data-dismiss="modal" class="btn btn-primary">Close</a>
+			</div>
+		</div>
+		<script src="{{STATIC_URL}}assets/js/jquery.js"></script>
+		<script src="{{STATIC_URL}}assets/js/bootstrap.min.js"></script>
+		<script src="{{STATIC_URL}}assets/js/csrf_token.js"></script>
+		<script>
+			
+			var callButton = document.getElementById('callGroup');
+
+			if(callButton) {
+				var callGroup = data.skypeGroup;
+				var getMyCallGroup = function() {
+					return callGroup.filter(function(element, index) {
+						return element !== currentUser.skype;
+					});
+				};
+				callButton.addEventListener('click', function(event) {
+					window.open('callto://' + getMyCallGroup().join(';'));
+				});
+			}
+			
+			function joinQueue(){
+				$.ajax({
+					url: "{% url lol_tourney.views.join_queue %}",
+					statusCode: {
+						403: function() {
+							window.location.href = '{% url lol_tourney.views.home %}'
+						}
+					}
+				}).done(function( html ){
+					$('#active-queue').html(html);
+				});
+			}
+			
+			function kickFromMatch(form,person){
+				$.ajax({
+					url: "{% url lol_tourney.views.kick_match %}",
+  					type: "POST",
+  					data: "match_id="+form
+  							+"&kickee="+person,
+					statusCode: {
+    					403: function() {
+							$("#mm_results_body").html("Sorry, bro. \
+You didn't authenticate. Are you sure you are logged in and are you sure you are an admin?");
+							$('#mm_results').modal('show')
+    					}
+  					},
+				}).done(function( html ){
+					$("#mm_results_body").html(html)
+					$('#mm_results').modal('show')
+				});
+				return false;
+			}
+			
+			function submitWinner(form){
+				if (form.winner.value == '')
+					return false
+				
+				$.ajax({
+					url: "{% url lol_tourney.views.finishMatch %}",
+  					type: "POST",
+  					data: "match_id="+form.match_id.value
+  							+"&winner="+form.winner.value,
+					statusCode: {
+    					403: function() {
+							$("#mm_results_body").html("Sorry, bro. \
+You didn't authenticate. Are you sure you are logged in and are you sure you are an admin?");
+							$('#mm_results').modal('show')
+    					}
+  					},
+				}).done(function( html ){
+					$("#mm_results_body").html(html)
+					$('#mm_results').modal('show')
+				});
+				return false;
+			}
+			
+			function matchmake(){
+				$.ajax({
+					url: "{% url lol_tourney.views.matchmake %}",
+					statusCode: {
+    					403: function() {
+							$("#mm_results_body").html("Sorry, bro. \
+You didn't authenticate. Are you sure you are logged in and are you sure you are an admin?");
+							$('#mm_results').modal('show')
+    					}
+  					},
+				}).done(function( html ) {
+  					$("#mm_results_body").html(html);
+  					$('#mm_results').modal('show')
+				});
+			}
+			function pageUpdate(){
+				t=setTimeout("pageUpdate()",5000);
+				$.ajax({
+					url: "{% url lol_tourney.views.ajaxUpdateMatches %}",
+				}).done(function( html ){
+					$('#active-matches').html(html);
+				});
+				$.ajax({
+					url: "{% url lol_tourney.views.ajaxUpdateQueue %}",
+				}).done(function( html ){
+					$('#active-queue').html(html);
+				});
+			}
+			$(document).ready(function(){
+				pageUpdate();
+			});
+		</script>
+	</body>
+</html>
