@@ -1,0 +1,3 @@
+Change the User model to use a django custom user model and eliminate the password field.
+Get rid of that friend crap.
+

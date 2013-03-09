@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+LoL Tournament -- Login
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block bar_title %}
+LoL Tournament Registration
+{% endblock %}
+
+{% block navigation %}
+<li>
+	<a href="{% url lol_tourney.views.home %}">Home</a>
+</li>
+{% if user.is_authenticated %}
+<li class="active">
+	<a href="{% url lol_tourney.views.user_info %}">Edit my Info</a>
+</li>
+<li>
+	<a href="{% url django.contrib.auth.views.logout %}">Sign out</a>
+</li>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+<form method="post" action=".">
+	{% csrf_token %}
+  {{ form.as_p }}
+
+  <input type="submit" value="Log in" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+<p>Forgot password? <a class-"btn" href="{% url django.contrib.auth.views.password_reset %}">Reset it</a></p>
+<p>Not member? <a class="btn" href="{% url lol_tourney.views.home %}">Register</a></p>
+{% endblock %}

@@ -1,0 +1,54 @@
+			<table class='teams' id='active-match-{{match}}'>
+		        {{#isAdmin}}
+		        <caption class='toolbar match'>
+		            <select name='winner'>
+		                <option>----</option>
+		                <option value=''>Blue</option>
+		                <option value=''>Purple</option>
+		            </select>
+		        </caption>
+		        {{/isAdmin}}
+			    <tbody class='blue'>
+			    {{#blue}}
+				    <tr class='profile{{#captain}} captain{{/captain}}'{{#currentUser}} id='currentUser'{{/currentUser}}>
+					    <td class='icon'><img width='64' height='64' src='{{icon}}' /></td>
+					    <td class='user'>
+						    <div class='league'>{{league}}</div>
+						    <div class='skype'>{{skype}}</div>
+					    </td>
+					    <td class='record'>
+						    <span class='totalWins'>{{totalWins}}</span>
+					    </td>
+					    {{#isAdmin}}
+					    <td class='admin'>
+						    <button class='remove' data-user='{{league}}'>x</button>
+					    </td>
+					    {{/isAdmin}}
+				    </tr>
+			    {{/blue}}
+			    </tbody>
+			    <tbody class='separator'>
+				    <tr>
+					    <td colspan='{{#isAdmin}}4{{/isAdmin}}{{^isAdmin}}3{{/isAdmin}}'></td>
+				    </tr>
+			    </tbody>
+			    <tbody class='purple'>
+			    {{#purple}}
+				    <tr class='profile{{#captain}} captain{{/captain}}'{{#currentUser}} id='currentUser'{{/currentUser}}>
+					    <td class='icon'><img width='64' height='64' src='{{icon}}' /></td>
+					    <td class='user'>
+						    <div class='league'>{{league}}</div>
+						    <div class='skype'>{{skype}}</div>
+					    </td>
+					    <td class='record'>
+						    <span class='totalWins'>{{totalWins}}</span>
+					    </td>
+					    {{#isAdmin}}
+					    <td class='admin'>
+						    <button class='remove' data-user='{{league}}'>x</button>
+					    </td>
+					    {{/isAdmin}}
+				    </tr>
+			    {{/purple}}
+			    </tbody>
+			</table>
